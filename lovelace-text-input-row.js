@@ -1,9 +1,8 @@
-const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace"));
+const LitElement = customElements.get('home-assistant-main') ? Object.getPrototypeOf(customElements.get('home-assistant-main')) : Object.getPrototypeOf(customElements.get('hui-view'));
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
 class TextInputRow extends LitElement {
-
   static get properties() {
     return {
       label: { type: String },
@@ -49,7 +48,7 @@ class TextInputRow extends LitElement {
 
   ready() {
     super.ready();
-    this.$.textinput.addEventListener('click', ev => ev.stopPropagation());
+    this.shadowRoot.querySelector('#textinput').addEventListener('change', this.valueChanged.bind(this));
   }
 
   setConfig(config) {
@@ -58,11 +57,10 @@ class TextInputRow extends LitElement {
 
   valueChanged(ev) {
     const newValue = this.shadowRoot.querySelector("#textinput").value;
-    const param = {
-      entity_id: this._config.entity,
-      value: newValue,
-    };
-    this._hass.callService('input_text', 'set_value', param);
+    // Créez une URL de recherche Google
+    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(newValue)}`;
+    // Ouvrir l'URL dans un nouvel onglet
+    window.open(googleSearchUrl, '_blank');
   }
 
   computeObjectId(entityId) {
